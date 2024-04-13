@@ -7,6 +7,8 @@ static int Ano_ValidateBin(void);
 static int Ano_ValidateFirmware(const T_FirmwareInfo *info);
 static int Ano_EraseFlash(void);
 static void Ano_SaveUpgradeBin(uint8_t *upgradeData);
+static T_FirmwareInfo info;
+uint32_t firmwareCount = 0;
 
 void Ano_UpgradeInit(T_AnoUpgrade *Ano_Upgrade)
 {
@@ -44,7 +46,7 @@ void Ano_ProcessUpgrade(uint8_t *upgradeFrameData, uint16_t frameDataLen)
 
   // printf("upgrade cmd:%02x \n",upgradeFrameData[0]);
   switch (upgradeFrameData[0]){
-    T_FirmwareInfo info;
+    
     case 0x00: //固件命令
       switch (upgradeFrameData[1]){
         case 0x01: // 第一部分命令
@@ -84,6 +86,8 @@ void Ano_ProcessUpgrade(uint8_t *upgradeFrameData, uint16_t frameDataLen)
       info.Cmd = (uint32_t)upgradeFrameData[19] << 24 | (uint32_t)upgradeFrameData[18] << 16 | (uint32_t)upgradeFrameData[17] << 8 | (uint32_t)upgradeFrameData[16];
       printFirmwareInfo(&info);
       Ano_ValidateFirmware(&info);
+      firmwareCount = info.BinLen / info.BinFLen;
+      Ano_LogDebug("count %d, %d", firmwareCount, info.BinLen % info.BinFLen);
       break;
     case 0x10:
       Ano_SaveUpgradeBin(&upgradeFrameData[1]);
@@ -125,7 +129,9 @@ void Ano_SaveUpgradeBin(uint8_t *upgradeData)
   sendInfo[3] = upgradeData[0];
   sendInfo[4] = upgradeData[1];
   Ano_SendData(ID_UPGRADE,(const uint8_t *)sendInfo, 5);
-  if(anoUpdate.Ano_UpgradeSave != NULL) anoUpdate.Ano_UpgradeSave(&upgradeData[2], number);
-  // if(Ano_Upgrade_Cb != NULL) Ano_Upgrade_Cb(&upgradeData[2], number);
-  // printf("number %d \n",number);
+  if(number == firmwareCount){
+    if(anoUpdate.Ano_UpgradeSave != NULL) anoUpdate.Ano_UpgradeSave(&upgradeData[2], (uint16_t)info.BinLen %info.BinFLen, number);
+  }else{
+    if(anoUpdate.Ano_UpgradeSave != NULL) anoUpdate.Ano_UpgradeSave(&upgradeData[2], (uint16_t)info.BinFLen, number);
+  }
 }

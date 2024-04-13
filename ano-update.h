@@ -6,7 +6,7 @@
 typedef struct 
 {
   void (* Ano_UpgradeStart)(void); //开始升级
-  void (* Ano_UpgradeSave)(uint8_t *upgradeData, uint16_t frameNumber); //升级帧回调
+  void (* Ano_UpgradeSave)(uint8_t *upgradeData,uint16_t frameLen, uint16_t frameNumber); //升级帧回调
   void (* Ano_UpgradeEnd)(void); //结束升级
 }T_AnoUpgrade;
 
