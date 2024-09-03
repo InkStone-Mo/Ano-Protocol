@@ -118,6 +118,28 @@ void Ano_SetDevInfo(T_DevInfo *devInfo)
   else Ano_SendLog(1,(const uint8_t *)"devinfo setting error!");
 }
 
+void Ano_GetData_fromInt16( uint16_t input_data, uint8_t *data)
+{
+  if(data == NULL){
+    Ano_SendLog(1, (const uint8_t *)"get int16 data error");
+  }
+  data[0] = input_data & 0xFF;
+  data[1] = input_data >> 8;
+}
+
+
+void Ano_GetData_fromInt32( uint32_t input_data, uint8_t *data)
+{
+  if(data == NULL){
+    Ano_SendLog(1, (const uint8_t *)"get int32 data error");
+  }
+  data[0] = input_data & 0xFF;
+  data[1] = (input_data >> 8) & 0xFF;
+  data[2] = (input_data >> 16) & 0xFF;
+  data[3] = (input_data >> 24) & 0xFF;
+}
+
+
 static void Ano_SendLog(uint8_t color,const uint8_t *str)
 {
   size_t len = strlen((const char *)str);

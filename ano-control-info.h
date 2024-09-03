@@ -61,6 +61,9 @@ void Ano_Send_Quaternion(int16_t qv0, int16_t qv1, int16_t qv2, int16_t qv3);
  * @param alt_add 附加高度数据 
  * @param alt_fu 融合高度数据 
  */ 
-void Ano_Send_Altitude(int16_t alt_bar, int16_t alt_add, int16_t alt_fu);
+void Ano_Send_Altitude(int32_t alt_bar, int32_t alt_add, int32_t alt_fu);
+
+
+void Ano_Send_Dist(uint16_t dist_ra, uint16_t dist_rd);
 
 #endif //_ANO_CONTROL_INFO_H_

@@ -174,7 +174,21 @@ typedef struct {
  * @param transmissionChannel 传输通道回调函数，用于发送数据 
  */ 
 void Ano_Init(void (* transmissionChannel)(const uint8_t *, uint16_t)); 
- 
+
+/**
+ * @brief 从int16数据中解出大小端
+ * @param input_data 输入的uint16类型数据
+ * @param data 存放地址
+ */
+void Ano_GetData_fromInt16( uint16_t input_data, uint8_t *data);
+
+/**
+ * @brief 从int32数据中解出大小端
+ * @param input_data 输入的int32类型数据
+ * @param data 存放地址
+ */
+void Ano_GetData_fromInt32( uint32_t input_data, uint8_t *data);
+
 /** 
  * @brief 发送ANO协议数据 
  * 
